@@ -1,4 +1,4 @@
-#include <eXoCAN.h>
+include <eXoCAN.h>
 #include <Stepper.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -9,16 +9,14 @@ char lrgb[3];
 // Stepper & erro light setup
 int stepsPerRevolution = 635;
 int stepperSpeed = 60;
-int pos, val;
+int pos, val, light, motor;
 Stepper x27(stepsPerRevolution, PB6, PB7, PB8, PB9); // initialize the stepper library
-char light[1];
-int motor;
+
 
 // Can setup
 eXoCAN can(STD_ID_LEN, BR250K, PORTA_11_12_XCVR);
 int PodId = 0x003;   // ID for rx filtering   <--- Must be different for each pod
 int id, fltIdx;
-char cBuff[46];
 
 //Read can Function
 inline void canRead(bool print = false) 
@@ -27,22 +25,23 @@ inline void canRead(bool print = false)
   {
     if (print)
     {
-      if (can.id = PodId) // if statement catches any missed by filter.
-      light[1] = (cBuff, can.rxData.bytes[0]); // first byte is for idiot light
-      int m1 = (cBuff, can.rxData.bytes[1]); // next 3 are added to make the 635 steps of the stepper motor
-      int m2 = (cBuff, can.rxData.bytes[2]);
-      int m3 = (cBuff, can.rxData.bytes[3]);
+      if (can.id == PodId)
+      {// if statement catches any missed by filter.
+      light = (can.rxData.bytes[0]); // first byte is for idiot light
+      int m1 = (can.rxData.bytes[1]); // next 3 are added to make the 635 steps of the stepper motor
+      int m2 = (can.rxData.bytes[2]);
+      int m3 = (can.rxData.bytes[3]);
        motor =   m1 + m2 + m3;
     }
-    if(can.id = 0x002){
-      lrgb[1] = (cBuff, can.rxData.bytes[0]);
-      lrgb[2] = (cBuff, can.rxData.bytes[1]);
-      lrgb[3] = (cBuff, can.rxData.bytes[2]);
+    if(can.id == 0x002){ \\0x002 is the backlight
+      lrgb[1] = (can.rxData.bytes[0]);
+      lrgb[2] = (can.rxData.bytes[1]);
+      lrgb[3] = (can.rxData.bytes[2]);
       }
     can.rxMsgLen = -1;
   }
   // return id;
-}
+}}
 
 void canISR() // get bus msg frame passed by a filter to FIFO0
 {
@@ -54,7 +53,7 @@ void canISR() // get bus msg frame passed by a filter to FIFO0
 //light function
 inline void idiot()
 {
- if (light[1] = 1)
+ if (light == 1)
  {
   digitalWrite(PB5, HIGH);
   } else {
