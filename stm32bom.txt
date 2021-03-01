@@ -1,0 +1,15 @@
+Reg options 3.3v
+ME6211
+TX6211B
+AMS1117
+XC6204 
+
+8 mhz xtal
+CSTNE8M00GH5C000R0
+
+32mhz xtal
+ECS-.327-9-34QN-TR
+2x 885392004010 9pf 0603
+
+backlight
+3x ws2812B
