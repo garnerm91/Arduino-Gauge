@@ -13,3 +13,10 @@ ECS-.327-9-34QN-TR
 
 backlight
 3x ws2812B
+
+can
+mcp2551
+
+Stepper
+dvr8833
+x27.168
